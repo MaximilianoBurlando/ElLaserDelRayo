@@ -66,6 +66,7 @@ const ProductGrid: React.FC<{
       className="grid gap-4"
       style={{
         gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+        maxWidth: "calc(4 * 1fr)", // 🔹 límite máximo de 4 columnas
       }}
     >
       {filteredProducts.map((product) => (
