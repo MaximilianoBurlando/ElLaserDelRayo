@@ -5,13 +5,13 @@ import { useNavigate } from "react-router-dom";
 type Props = {
   search: string;
   setSearch: (v: string) => void;
-  setSort: (v: string) => void; // 👈 agregar
+  setSort: (v: string) => void;
   children: React.ReactNode;
 };
 
 const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate(); // ✅ SOLO ACÁ
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -20,8 +20,11 @@ const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
         onClose={() => setSidebarOpen(false)}
         setSort={setSort}
       />
-      <div className="bg-white shadow p-4 flex justify-between items-center">
+
+      {/* 🔥 NAVBAR */}
+      <div className="bg-white shadow p-3 sm:p-4 flex items-center justify-between gap-2">
         
+        {/* ☰ MENU */}
         <button
           onClick={() => setSidebarOpen(true)}
           className="btn btn-outline"
@@ -29,44 +32,47 @@ const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
           ☰
         </button>
 
+        {/* 🔍 BUSCADOR */}
         <input
           placeholder="Buscar..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="input w-full max-w-[250px]"
+          className="input w-full max-w-[150px] sm:max-w-[250px]"
         />
 
-        <div className="flex gap-2">
+        {/* 💻 BOTONES SOLO EN DESKTOP */}
+        <div className="hidden md:flex gap-2">
           <button
             className="btn btn-outline"
             onClick={() => navigate("/")}
           >
             Inicio
           </button>
+
           <button
             className="btn btn-outline"
             onClick={() => navigate("/todosnuestrosproductos")}
           >
-            Todos Nuestros Productos
+            Todos
           </button>
-          
+
           <button
             className="btn btn-outline"
             onClick={() => navigate("/conqueproductostrabajamos")}
           >
-            Con que Productos Trabajamos
+            Productos
           </button>
 
           <button
             className="btn btn-outline"
             onClick={() => navigate("/acercadenosotros")}
           >
-            Acerca de nosotros
+            Nosotros
           </button>
-        
         </div>
       </div>
 
+      {/* CONTENIDO */}
       <div className="p-4">{children}</div>
     </div>
   );
