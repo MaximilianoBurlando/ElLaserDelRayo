@@ -1,0 +1,93 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+}
+
+.hero-img {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+.buttons button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  background: #38bdf8;
+  color: black;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.page {
+  font-family: Arial, sans-serif;
+  color: #111;
+}
+
+/* HEADER placeholder */
+.header-placeholder {
+  padding: 20px;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 40px 20px;
+  background: #e0f2fe;
+}
+
+.hero-img {
+  width: 120px;
+  margin-bottom: 20px;
+}
+
+/* SERVICES */
+.services {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.cards {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 200px;
+  padding: 15px;
+  border-radius: 10px;
+  background: #f1f5f9;
+}
+
+.card img {
+  width: 100%;
+}
+
+/* HIGHLIGHT */
+.highlight {
+  padding: 40px;
+  background: #38bdf8;
+  color: white;
+  text-align: center;
+}
+
+/* FOOTER */
+.footer {
+  padding: 20px;
+  text-align: center;
+  background: #0f172a;
+  color: white;
+}
