@@ -29,15 +29,16 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
     <div
       onClick={() => navigate(`/producto/${product.id}`)}
-      className="border rounded-2xl shadow p-3 cursor-pointer hover:scale-105 active:scale-95 transition flex flex-col"
-      style={{ height: "100%" }} // se expande al contenedor cuadrado
+      className="border rounded-2xl shadow p-4 cursor-pointer hover:scale-105 active:scale-95 transition flex flex-col"
     >
       <img
         src={product.image}
         alt={product.name}
-        className="w-full h-32 sm:h-36 md:h-40 object-cover rounded-xl mb-2"
+        className="w-full h-40 sm:h-40 md:h-40 object-cover rounded-xl"
       />
-      <h2 className="text-sm sm:text-base font-semibold">{product.name}</h2>
+      <h2 className="text-sm sm:text-base font-semibold mt-2">
+        {product.name}
+      </h2>
     </div>
   );
 };
@@ -47,22 +48,17 @@ const ProductGrid: React.FC<{
   search: string;
   sort: string;
 }> = ({ search, sort }) => {
-  // 1️⃣ Base: usar ids si existen
-  let baseProducts: Product[] =
+  const baseProducts: Product[] =
     ids.length > 0
       ? ids
           .map((id) => products.find((p) => p.id === id))
           .filter((p): p is Product => p !== undefined)
       : products;
 
-  // 2️⃣ Filtro por búsqueda
   let filteredProducts = baseProducts.filter((p) =>
-    (p.name + p.description)
-      .toLowerCase()
-      .includes(search.toLowerCase())
+    (p.name + p.description).toLowerCase().includes(search.toLowerCase())
   );
 
-  // 3️⃣ Orden
   filteredProducts = filteredProducts.sort((a, b) => {
     if (sort === "az") return a.name.localeCompare(b.name);
     if (sort === "za") return b.name.localeCompare(a.name);
@@ -80,9 +76,7 @@ const ProductGrid: React.FC<{
       {filteredProducts.map((product) => (
         <div
           key={product.id}
-          style={{
-            aspectRatio: "1 / 1", // 🔹 cada tarjeta cuadrada
-          }}
+          style={{ aspectRatio: "1 / 1" }}
         >
           <ProductCard product={product} />
         </div>

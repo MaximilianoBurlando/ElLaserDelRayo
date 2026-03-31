@@ -27,14 +27,14 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
     <div
       onClick={() => navigate(`/producto/${product.id}`)}
-      className="border rounded-2xl shadow p-3 cursor-pointer hover:scale-105 active:scale-95 transition flex flex-col"
+      className="border rounded-2xl shadow p-4 cursor-pointer hover:scale-105 active:scale-95 transition flex flex-col"
     >
       <img
         src={product.image}
         alt={product.name}
-        className="w-full h-32 sm:h-36 md:h-40 object-cover rounded-xl mb-2"
+        className="w-full h-40 sm:h-40 md:h-40 object-cover rounded-xl"
       />
-      <h2 className="text-sm sm:text-base font-semibold">{product.name}</h2>
+      <h2 className="text-sm sm:text-base font-semibold mt-2">{product.name}</h2>
     </div>
   );
 };
@@ -44,11 +44,9 @@ const ProductGrid: React.FC<{
   search: string;
   sort: string;
 }> = ({ search, sort }) => {
-  const filteredProducts = products
+  let filteredProducts = products
     .filter((p) =>
-      (p.name + p.description)
-        .toLowerCase()
-        .includes(search.toLowerCase())
+      (p.name + p.description).toLowerCase().includes(search.toLowerCase())
     )
     .sort((a, b) => {
       if (sort === "az") return a.name.localeCompare(b.name);
@@ -68,7 +66,7 @@ const ProductGrid: React.FC<{
         <div
           key={product.id}
           style={{
-            aspectRatio: "1 / 1", // 🔹 cada contenedor es cuadrado
+            aspectRatio: "1 / 1", // tarjeta cuadrada
           }}
         >
           <ProductCard product={product} />
@@ -84,10 +82,7 @@ export default function AllOurProducts({ filters }: { filters: Filters }) {
 
   return (
     <div className="p-6 text-center">
-      <h1 className="text-2xl font-bold mb-4">
-        Todos nuestros productos
-      </h1>
-
+      <h1 className="text-2xl font-bold mb-4">Todos nuestros productos</h1>
       <ProductGrid search={search} sort={sort} />
     </div>
   );
