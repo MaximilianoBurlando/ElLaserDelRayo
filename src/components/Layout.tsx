@@ -31,7 +31,6 @@ const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
       <div className="bg-white shadow p-4">
         {/* FILA SUPERIOR: MENU + BUSCADOR */}
         <div className="flex items-center gap-3 flex-wrap">
-          {/* ☰ MENU */}
           <button
             onClick={() => setSidebarOpen(true)}
             className="btn btn-outline h-20 flex-shrink-0 px-6 text-lg"
@@ -39,7 +38,6 @@ const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
             ☰
           </button>
 
-          {/* BUSCADOR */}
           <input
             placeholder="Buscar..."
             value={search}
@@ -62,21 +60,29 @@ const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
                 min-w-[120px] sm:min-w-[200px]
                 text-center
                 text-lg
-                whitespace-normal sm:whitespace-nowrap
-                break-words
+                whitespace-nowrap
+                overflow-hidden
                 rounded-lg
                 shadow
                 transition-all duration-500 ease-in-out
               "
               title={btn.label} // tooltip con texto completo
             >
-              {btn.label}
+              <span
+                className="
+                  block
+                  w-full
+                  truncate
+                  text-[clamp(0.75rem,1vw,1.125rem)]
+                "
+              >
+                {btn.label}
+              </span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* CONTENIDO */}
       <div className="p-4">{children}</div>
     </div>
   );
