@@ -48,7 +48,6 @@ const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
           />
         </div>
 
-        {/* FILA BOTONES */}
         <div className="flex gap-2 flex-wrap mt-2">
           {buttons.map((btn) => (
             <button
@@ -62,7 +61,9 @@ const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
                 min-w-[70px] 
                 h-8 
                 px-2 
-                text-center 
+                flex 
+                justify-center 
+                items-center 
                 truncate
               "
               title={btn.label} // tooltip con texto completo
