@@ -13,6 +13,13 @@ const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
+  const buttons = [
+    { label: "Inicio", path: "/" },
+    { label: "Todos nuestros productos", path: "/todosnuestrosproductos" },
+    { label: "Con qué productos trabajamos", path: "/conqueproductostrabajamos" },
+    { label: "Acerca de nosotros", path: "/acercadenosotros" },
+  ];
+
   return (
     <div>
       <Sidebar
@@ -21,65 +28,53 @@ const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
         setSort={setSort}
       />
 
-      {/* 🔥 NAVBAR */}
-      <div className="bg-white shadow p-3 sm:p-4 flex flex-col gap-2">
+      <div className="bg-white shadow p-4">
+        {/* FILA SUPERIOR: MENU + BUSCADOR */}
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* ☰ MENU */}
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="btn btn-outline h-20 flex-shrink-0 px-6 text-lg"
+          >
+            ☰
+          </button>
 
-    {/* 🔝 FILA SUPERIOR */}
-    <div className="flex items-center gap-2">
-      
-      {/* ☰ MENU */}
-      <button
-        onClick={() => setSidebarOpen(true)}
-        className="btn btn-outline"
-      >
-        ☰
-      </button>
+          {/* BUSCADOR */}
+          <input
+            placeholder="Buscar..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="input flex-1 h-20 min-w-[140px] px-6 text-lg"
+          />
+        </div>
 
-      {/* 🔍 BUSCADOR */}
-      <input
-        placeholder="Buscar..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="input flex-1"
-      />
-    </div>
-
-    {/* 🔽 FILA INFERIOR (BOTONES) */}
-    <div className="flex gap-2 overflow-x-auto">
-      
-      <button
-        className="btn btn-outline whitespace-nowrap"
-        onClick={() => navigate("/")}
-      >
-        <span className="sm:hidden">Inicio</span>
-        <span className="hidden sm:inline">Inicio</span>
-      </button>
-
-      <button
-        className="btn btn-outline whitespace-nowrap"
-        onClick={() => navigate("/todosnuestrosproductos")}
-      >
-        <span className="sm:hidden">Todos</span>
-        <span className="hidden sm:inline">Todos nuestros productos</span>
-      </button>
-
-      <button
-        className="btn btn-outline whitespace-nowrap"
-        onClick={() => navigate("/conqueproductostrabajamos")}
-      >
-        <span className="sm:hidden">Prod</span>
-        <span className="hidden sm:inline">Con qué productos trabajamos</span>
-      </button>
-
-      <button
-        className="btn btn-outline whitespace-nowrap"
-        onClick={() => navigate("/acercadenosotros")}
-      >
-        <span className="sm:hidden">Nos</span>
-        <span className="hidden sm:inline">Acerca de nosotros</span>
-      </button>
-    </div>
-  </div>
+        {/* FILA BOTONES */}
+        <div className="flex gap-4 flex-wrap mt-4 transition-all duration-500 ease-in-out">
+          {buttons.map((btn) => (
+            <button
+              key={btn.path}
+              onClick={() => navigate(btn.path)}
+              className="
+                btn btn-outline
+                h-20
+                px-6
+                flex-1 sm:flex-none
+                min-w-[120px] sm:min-w-[200px]
+                text-center
+                text-lg
+                whitespace-normal sm:whitespace-nowrap
+                break-words
+                rounded-lg
+                shadow
+                transition-all duration-500 ease-in-out
+              "
+              title={btn.label} // tooltip con texto completo
+            >
+              {btn.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* CONTENIDO */}
       <div className="p-4">{children}</div>
