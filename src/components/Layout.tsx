@@ -22,55 +22,64 @@ const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
       />
 
       {/* 🔥 NAVBAR */}
-      <div className="bg-white shadow p-3 sm:p-4 flex items-center justify-between gap-2">
-        
-        {/* ☰ MENU */}
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="btn btn-outline"
-        >
-          ☰
-        </button>
+      <div className="bg-white shadow p-3 sm:p-4 flex flex-col gap-2">
 
-        {/* 🔍 BUSCADOR */}
-        <input
-          placeholder="Buscar..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="input w-full max-w-[150px] sm:max-w-[250px]"
-        />
+    {/* 🔝 FILA SUPERIOR */}
+    <div className="flex items-center gap-2">
+      
+      {/* ☰ MENU */}
+      <button
+        onClick={() => setSidebarOpen(true)}
+        className="btn btn-outline"
+      >
+        ☰
+      </button>
 
-        {/* 💻 BOTONES SOLO EN DESKTOP */}
-        <div className="hidden md:flex gap-2">
-          <button
-            className="btn btn-outline"
-            onClick={() => navigate("/")}
-          >
-            Inicio
-          </button>
+      {/* 🔍 BUSCADOR */}
+      <input
+        placeholder="Buscar..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="input flex-1"
+      />
+    </div>
 
-          <button
-            className="btn btn-outline"
-            onClick={() => navigate("/todosnuestrosproductos")}
-          >
-            Todos
-          </button>
+    {/* 🔽 FILA INFERIOR (BOTONES) */}
+    <div className="flex gap-2 overflow-x-auto">
+      
+      <button
+        className="btn btn-outline whitespace-nowrap"
+        onClick={() => navigate("/")}
+      >
+        <span className="sm:hidden">Inicio</span>
+        <span className="hidden sm:inline">Inicio</span>
+      </button>
 
-          <button
-            className="btn btn-outline"
-            onClick={() => navigate("/conqueproductostrabajamos")}
-          >
-            Productos
-          </button>
+      <button
+        className="btn btn-outline whitespace-nowrap"
+        onClick={() => navigate("/todosnuestrosproductos")}
+      >
+        <span className="sm:hidden">Todos</span>
+        <span className="hidden sm:inline">Todos nuestros productos</span>
+      </button>
 
-          <button
-            className="btn btn-outline"
-            onClick={() => navigate("/acercadenosotros")}
-          >
-            Nosotros
-          </button>
-        </div>
-      </div>
+      <button
+        className="btn btn-outline whitespace-nowrap"
+        onClick={() => navigate("/conqueproductostrabajamos")}
+      >
+        <span className="sm:hidden">Prod</span>
+        <span className="hidden sm:inline">Con qué productos trabajamos</span>
+      </button>
+
+      <button
+        className="btn btn-outline whitespace-nowrap"
+        onClick={() => navigate("/acercadenosotros")}
+      >
+        <span className="sm:hidden">Nos</span>
+        <span className="hidden sm:inline">Acerca de nosotros</span>
+      </button>
+    </div>
+  </div>
 
       {/* CONTENIDO */}
       <div className="p-4">{children}</div>
