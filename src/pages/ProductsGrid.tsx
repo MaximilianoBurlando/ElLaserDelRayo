@@ -29,7 +29,8 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
     <div
       onClick={() => navigate(`/producto/${product.id}`)}
-      className="border rounded-2xl shadow p-4 cursor-pointer hover:scale-105 transition active:scale-95"
+      className="border rounded-2xl shadow p-4 cursor-pointer hover:scale-105 active:scale-95 transition flex flex-col"
+      style={{ borderColor: "#555" }} // 🔹 borde gris oscuro suave
     >
       <img
         src={product.image}
