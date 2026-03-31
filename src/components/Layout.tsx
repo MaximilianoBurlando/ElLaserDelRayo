@@ -15,8 +15,8 @@ const Layout: React.FC<Props> = ({ search, setSearch, setSort, children }) => {
 
   const buttons = [
     { label: "Inicio", path: "/" },
-    { label: "Todos nuestros productos", path: "/todosnuestrosproductos" },
-    { label: "Con qué productos trabajamos", path: "/conqueproductostrabajamos" },
+    { label: "Productos", path: "/todosnuestrosproductos" },
+    { label: "Materiales", path: "/conqueproductostrabajamos" },
     { label: "Acerca de nosotros", path: "/acercadenosotros" },
   ];
 

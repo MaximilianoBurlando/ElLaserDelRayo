@@ -27,16 +27,14 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
     <div
       onClick={() => navigate(`/producto/${product.id}`)}
-      className="border rounded-2xl shadow p-3 cursor-pointer hover:scale-105 active:scale-95 transition"
+      className="border rounded-2xl shadow p-3 cursor-pointer hover:scale-105 active:scale-95 transition flex flex-col"
     >
       <img
         src={product.image}
         alt={product.name}
-        className="w-full h-32 sm:h-36 md:h-40 object-cover rounded-xl"
+        className="w-full h-32 sm:h-36 md:h-40 object-cover rounded-xl mb-2"
       />
-      <h2 className="text-sm sm:text-base font-semibold mt-2">
-        {product.name}
-      </h2>
+      <h2 className="text-sm sm:text-base font-semibold">{product.name}</h2>
     </div>
   );
 };
@@ -60,9 +58,21 @@ const ProductGrid: React.FC<{
     });
 
   return (
-    <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+    <div
+      className="grid gap-4"
+      style={{
+        gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+      }}
+    >
       {filteredProducts.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <div
+          key={product.id}
+          style={{
+            aspectRatio: "1 / 1", // 🔹 cada contenedor es cuadrado
+          }}
+        >
+          <ProductCard product={product} />
+        </div>
       ))}
     </div>
   );

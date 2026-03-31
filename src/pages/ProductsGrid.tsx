@@ -48,23 +48,34 @@ const ProductGrid: React.FC<{
 }> = ({ search, sort }) => {
   
   const filteredProducts = ids
-  .map((id) => products.find((p) => p.id === id))
-  .filter((p): p is Product => Boolean(p)) // 👈 importante para TS
-  .filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  )
-  .sort((a, b) => {
-    if (sort === "az") return a.name.localeCompare(b.name);
-    if (sort === "za") return b.name.localeCompare(a.name);
-    if (sort === "mas-vendido") return b.id - a.id;
-    return 0;
-  });
+    .map((id) => products.find((p) => p.id === id))
+    .filter((p): p is Product => Boolean(p))
+    .filter((p) =>
+      p.name.toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sort === "az") return a.name.localeCompare(b.name);
+      if (sort === "za") return b.name.localeCompare(a.name);
+      if (sort === "mas-vendido") return b.id - a.id;
+      return 0;
+    });
 
-  const visibleProducts = filteredProducts;
   return (
-    <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
-      {visibleProducts.map((product) => (
-        <ProductCard key={product.id} product={product} />
+    <div
+      className="grid gap-4"
+      style={{
+        gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+      }}
+    >
+      {filteredProducts.map((product) => (
+        <div
+          key={product.id}
+          style={{
+            aspectRatio: "1 / 1", // 🔹 asegura que sea cuadrado
+          }}
+        >
+          <ProductCard product={product} />
+        </div>
       ))}
     </div>
   );
