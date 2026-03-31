@@ -28,7 +28,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
   return (
     <div
-      onClick={() => navigate(`/product/${product.id}`)}
+      onClick={() => navigate(`/producto/${product.id}`)}
       className="border rounded-2xl shadow p-3 cursor-pointer hover:scale-105 active:scale-95 transition"
     >
       <img
