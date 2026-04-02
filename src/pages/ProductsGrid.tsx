@@ -92,6 +92,16 @@ export default function ProductsGrid({ filters }: { filters: Filters }) {
       <h1 className="text-2xl font-bold mb-4">
         El Rayo Del Laser
       </h1>
+      <a
+        href="https://www.instagram.com/elrayodellaser?igsh=MXc5aTN4MjMxa215dg=="
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block mt-2 px-6 py-2 rounded-full text-white font-semibold 
+           bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 
+           hover:scale-105 transition transform"
+      >
+        📸 Seguinos en Instagram
+      </a>
 
       <ProductGrid search={search} sort={sort} />
     </div>
