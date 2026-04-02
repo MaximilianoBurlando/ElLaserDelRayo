@@ -5,16 +5,33 @@ export default function AboutUs() {
       <h1 className="text-3xl font-bold mb-4">
         El Rayo Del Laser
       </h1>
-      <a
-        href="https://www.instagram.com/elrayodellaser?igsh=MXc5aTN4MjMxa215dg=="
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block mt-2 px-6 py-2 rounded-full text-white font-semibold 
-           bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 
-           hover:scale-105 transition transform"
-      >
-        📸 Seguinos en Instagram
-      </a>
+      <div className="flex flex-col items-center gap-3 mt-2 mb-6">
+
+        {/* Instagram */}
+        <a
+          href="https://www.instagram.com/elrayodellaser?igsh=MXc5aTN4MjMxa215dg=="
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-2 rounded-full text-white font-semibold 
+                    bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 
+                    hover:scale-105 transition transform"
+        >
+          📸 Seguinos en Instagram
+        </a>
+
+        {/* Facebook */}
+        <a
+          href="https://www.facebook.com/TU_PAGINA"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-2 rounded-full text-white font-semibold 
+                    bg-blue-600 hover:bg-blue-700 
+                    hover:scale-105 transition transform"
+        >
+          👍 Seguinos en Facebook
+        </a>
+
+      </div>
       <p className="text-gray-700 mb-4">
         Bienvenido a El Rayo Del Laser. Nos especializamos en productos
         personalizados realizados con tecnología de corte y grabado láser.
