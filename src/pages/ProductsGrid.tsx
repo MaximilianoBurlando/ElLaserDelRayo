@@ -96,7 +96,7 @@ export default function ProductsGrid({ filters }: { filters: Filters }) {
         href="https://www.instagram.com/elrayodellaser?igsh=MXc5aTN4MjMxa215dg=="
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block mt-2 px-6 py-2 rounded-full text-white font-semibold 
+        className="inline-block mt-2 mb-6 px-6 py-2 rounded-full text-white font-semibold 
            bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 
            hover:scale-105 transition transform"
       >
