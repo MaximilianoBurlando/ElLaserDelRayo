@@ -1,38 +1,75 @@
 [
   {
     "id": 1,
-    "name": "Mates",
-    "image": "/Laser Pagina/1.jpeg",
-    "description": "Descripción 1"
+    "name": "Mate Boca",
+    "image": "/Laser Pagina/Tallado/Mate/Boca.jpeg",
+    "description": "Mate Tallado"
   },
   {
     "id": 2,
-    "name": "A",
-    "image": "/Laser Pagina/2.jpeg",
-    "description": "Descripción 2"
+    "name": "Mate River",
+    "image": "/Laser Pagina/Tallado/Mate/River.jpeg",
+    "description": "Mate Tallado"
   },
   {
     "id": 3,
-    "name": "Z",
-    "image": "/Laser Pagina/3.jpeg",
-    "description": "Descripción 3"
+    "name": "Automovilisticos",
+    "image": "/Laser Pagina/Tallado/Mate/Conjunto Automovilistico.jpeg",
+    "description": "Mates Tallados"
   },
   {
     "id": 4,
-    "name": "D",
-    "image": "/Laser Pagina/4.jpeg",
-    "description": "Descripción 4"
+    "name": "Chop Granero",
+    "image": "/Laser Pagina/Tallado/Chops/chop granero 66.jpeg",
+    "description": "Chop Tallado"
   },
   {
     "id": 5,
-    "name": "C",
-    "image": "/Laser Pagina/5.jpeg",
-    "description": "Descripción 5"
+    "name": "Chop HOTROT",
+    "image": "/Laser Pagina/Tallado/Chops/chophotrot.jpeg",
+    "description": "Chop Tallado"
   },
   {
     "id": 6,
-    "name": "B",
-    "image": "/Laser Pagina/6.jpeg",
-    "description": "Descripción 6"
-  }
+    "name": "Picada",
+    "image": "/Laser Pagina/Tallado/Picada/Picada.png",
+    "description": "Picada Tallada"
+  },
+  {
+    "id": 7,
+    "name": "Automovilisticos",
+    "image": "/Laser Pagina/Tallado/Llaveros/Llaveros Automovilisticos.jpeg",
+    "description": "Llaveros Tallados"
+  },
+  {
+    "id": 8,
+    "name": "Mate Simple",
+    "image": "/Laser Pagina/Mate/Mate 1.png",
+    "description": "Llaveros Tallados"
+  },
+  {
+    "id": 9,
+    "name": "Mate Copa",
+    "image": "/Laser Pagina/Mate/Mate 3.png",
+    "description": "Llaveros Tallados"
+  },
+  {
+    "id": 10,
+    "name": "Mate Copa+Aluminio",
+    "image": "/Laser Pagina/Mate/Mate 3.png",
+    "description": "Llaveros Tallados"
+  },
+  {
+    "id": 11,
+    "name": "Mate Copa",
+    "image": "/Laser Pagina/Mate/Mate 3.png",
+    "description": "Llaveros Tallados"
+  },
+  {
+    "id": 12,
+    "name": "Picada",
+    "image": "/Laser Pagina/Picada/Picada.png",
+    "description": "Llaveros Tallados"
+  }  
+
 ]

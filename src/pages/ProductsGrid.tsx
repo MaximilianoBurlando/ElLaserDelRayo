@@ -10,7 +10,7 @@ export type Product = {
   description: string;
 };
 
-const ids = [5, 2];
+const ids = [1, 3, 5, 6, 7];
 
 type Filters = {
   search: string;
