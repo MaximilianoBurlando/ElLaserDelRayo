@@ -45,31 +45,55 @@
     "id": 8,
     "name": "Mate Simple",
     "image": "/Laser Pagina/Mate/Mate 1.png",
-    "description": "Llaveros Tallados"
+    "description": "Mate Tallado"
   },
   {
     "id": 9,
     "name": "Mate Copa Liso",
     "image": "/Laser Pagina/Mate/Mate 2.png",
-    "description": "Llaveros Tallados"
+    "description": "Mate Tallado"
   },
   {
     "id": 10,
     "name": "Mate Copa+Aluminio",
     "image": "/Laser Pagina/Mate/Mate 4.png",
-    "description": "Llaveros Tallados"
+    "description": "Mate Tallado"
   },
   {
     "id": 11,
     "name": "Mate Copa",
     "image": "/Laser Pagina/Mate/Mate 3.png",
-    "description": "Llaveros Tallados"
+    "description": "Mate Tallado"
   },
   {
     "id": 12,
-    "name": "Picada",
-    "image": "/Laser Pagina/Picada/Picada.png",
-    "description": "Llaveros Tallados"
-  }  
+    "name": "Chop",
+    "image": "/Laser Pagina/Chop/Chop.png",
+    "description": "Chop de cerveza Tallado"
+  },
+  {
+    "id": 13,
+    "name": "Bol Chico",
+    "image": "/Laser Pagina/Bol/Bol Chico.png",
+    "description": "Bol Tallado"
+  },
+  {
+    "id": 14,
+    "name": "Bol Mediano",
+    "image": "/Laser Pagina/Bol/Bol Mediano.png",
+    "description": "Bol Tallado"
+  },
+  {
+    "id": 15,
+    "name": "Bol Grande",
+    "image": "/Laser Pagina/Bol/Bol Grande.png",
+    "description": "Bol Tallado"
+  },
+  {
+    "id": 17,
+    "name": "Plato De Madera",
+    "image": "/Laser Pagina/Plato/Plato.png",
+    "description": "Plato Tallados"
+  }
 
 ]
