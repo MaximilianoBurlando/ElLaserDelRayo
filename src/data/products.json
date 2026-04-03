@@ -94,6 +94,23 @@
     "name": "Plato De Madera",
     "image": "/Laser Pagina/Plato/Plato.png",
     "description": "Plato Tallados"
+  },
+  {
+    "id": 18,
+    "name": "Anotador",
+    "image": "/Laser Pagina/Anotador/Anotador.png",
+    "description": "Anotador Tallado"
+  },
+  {
+    "id": 19,
+    "name": "Llavero",
+    "image": "/Laser Pagina/Llavero/Llavero.png",
+    "description": "Llavero Tallado"
+  },
+  {
+    "id": 20,
+    "name": "Llavero Color Madera",
+    "image": "/Laser Pagina/Llavero/Llavero Roble.png",
+    "description": "Llavero Color Madera Tallado"
   }
-
 ]

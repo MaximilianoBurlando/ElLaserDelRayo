@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import productsData from "../data/products.json";
 
-const ids = [6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+const ids = [6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
 // Tipos
 export type Product = {
