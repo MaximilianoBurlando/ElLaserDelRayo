@@ -351,7 +351,7 @@ const ProductPage: React.FC = () => {
 
           {/* 🎛️ CONTROLES */}
           <div className="mt-4 space-y-2">
-            <label>Esto es SOLO una muestra.<br/>
+            <label>Esto es solo una aproximacion<br/>
               Consultenos para mostrarle una muestra real!</label>
             <input type="file" accept="image/*" onChange={handleUpload} />
 
