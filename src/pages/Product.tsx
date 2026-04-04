@@ -53,7 +53,9 @@ const ProductPage: React.FC = () => {
   // 💬 Mensaje para WhatsApp
   const [message, setMessage] = useState("");
   const [gamma, setGamma] = useState(1.6);
-
+  const [showCamera, setShowCamera] = useState(false);
+  const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
   // 🖼️ Imagen subida por el usuario (base64)
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
@@ -74,31 +76,72 @@ const ProductPage: React.FC = () => {
 
   // 📂 SUBIR IMAGEN
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+      const file = e.target.files?.[0];
+      if (!file) return;
 
-    const reader = new FileReader();
+      const reader = new FileReader();
 
-    // Convertimos la imagen a base64
-    reader.onload = () => {
-      setUploadedImage(reader.result as string);
+      // Convertimos la imagen a base64
+      reader.onload = () => {
+        setUploadedImage(reader.result as string);
+      };
+
+      reader.readAsDataURL(file);
     };
+    // 🌳 PALETA REAL (basada en tu imagen)
+  const woodPalette = [
+    { r: 210, g: 180, b: 140 }, // claro
+    { r: 160, g: 110, b: 70 },  // medio
+    { r: 110, g: 60, b: 30 },   // oscuro
+    { r: 75, g: 40, b: 20 },    // quemado
+  ];
+  // 📌 Inicializar mensaje cuando carga el producto
+    useEffect(() => {
+      if (product) {
+        setMessage(`Hola! Estoy interesado en "${product.name}"`);
+      }
+    }, [product]);
+    //camara
+    const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user" } // frontal en celular
+      });
 
-    reader.readAsDataURL(file);
-  };
-  // 🌳 PALETA REAL (basada en tu imagen)
-const woodPalette = [
-  { r: 210, g: 180, b: 140 }, // claro
-  { r: 160, g: 110, b: 70 },  // medio
-  { r: 110, g: 60, b: 30 },   // oscuro
-  { r: 75, g: 40, b: 20 },    // quemado
-];
-// 📌 Inicializar mensaje cuando carga el producto
-  useEffect(() => {
-    if (product) {
-      setMessage(`Hola! Estoy interesado en "${product.name}"`);
+      setVideoStream(stream);
+      setShowCamera(true);
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (err) {
+      console.error("Error accediendo a la cámara:", err);
     }
-  }, [product]);
+  };
+  const stopCamera = () => {
+    videoStream?.getTracks().forEach(track => track.stop());
+    setShowCamera(false);
+  };
+  const takePhoto = () => {
+    if (!videoRef.current) return;
+
+    const video = videoRef.current;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.drawImage(video, 0, 0);
+
+    const imageData = canvas.toDataURL("image/png");
+
+    setUploadedImage(imageData); // 🔥 esto lo mete directo a tu flujo actual
+
+    stopCamera();
+  };
 /* 🎯 función para interpolar dentro de la paleta
 const getWoodColor = (t: number) => {
   const scaled = t * (woodPalette.length - 1);
@@ -554,7 +597,7 @@ const getWoodColor = (t: number) => {
       window.removeEventListener("touchend", stopDragging);
     };
   }, [dragging, scale]);
-
+  
   // 📲 ENVIAR A WHATSAPP
   const handleSend = () => {
     if (!message || !product) return;
@@ -627,7 +670,12 @@ const getWoodColor = (t: number) => {
             <label><center>¡ADVERTENCIA!</center><br/>Esto es solo una aproximación <br/>
               ¡Consúltenos para mostrarle una muestra real!</label>
             <input type="file" accept="image/*" onChange={handleUpload} />
-
+            <button
+              onClick={startCamera}
+              className="w-full mt-2 bg-blue-600 text-white py-2 rounded-xl"
+            >
+              Usar cámara
+            </button>
             <div>
               <label>Modo de procesamiento</label>
               <select
@@ -650,7 +698,33 @@ const getWoodColor = (t: number) => {
                 )}
               </select>
             </div>
+{showCamera && (
+  <div className="fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-50">
+    
+    <video
+      ref={videoRef}
+      autoPlay
+      playsInline
+      className="w-80 rounded-xl mb-4"
+    />
 
+    <div className="flex gap-4">
+      <button
+        onClick={takePhoto}
+        className="bg-green-600 text-white px-4 py-2 rounded-xl"
+      >
+        📸 Sacar foto
+      </button>
+
+        <button
+          onClick={stopCamera}
+          className="bg-red-600 text-white px-4 py-2 rounded-xl"
+        >
+          ❌ Cancelar
+        </button>
+      </div>
+    </div>
+  )}
             {/* Escala */}
             <div>
               <label>Escala</label>
