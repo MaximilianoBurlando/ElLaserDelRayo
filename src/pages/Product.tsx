@@ -19,6 +19,7 @@ const products = productsData as Product[];
 const ProductPage: React.FC = () => {
   // 🔎 Obtener ID desde la URL
   const { id } = useParams<{ id: string }>();
+  const [mode, setMode] = useState<"edges" | "smart" | "laser">("edges");
   const productEffects: Record<number, "wood" | "edges"> = {
     /*18: "wood",
     19: "wood",
@@ -139,7 +140,6 @@ const ProductPage: React.FC = () => {
       };
     });
   };
-  //convertir imagen a lineas
   const convertToEdgesTransparent = (imageSrc: string): Promise<string> => {
   return new Promise((resolve) => {
     const img = new Image();
@@ -177,50 +177,126 @@ const ProductPage: React.FC = () => {
           const magnitude = Math.sqrt(gx * gx + gy * gy);
 
           if (magnitude > 80) {
-            // 🔥 línea visible (negro)
             output[i] = 0;
             output[i + 1] = 0;
             output[i + 2] = 0;
-            output[i + 3] = 255; // opaco
+            output[i + 3] = 255;
           } else {
-            // 🔥 fondo transparente
-            output[i] = 0;
-            output[i + 1] = 0;
-            output[i + 2] = 0;
-            output[i + 3] = 0; // TRANSPARENTE
+            output[i + 3] = 0;
           }
         }
       }
 
       ctx.putImageData(new ImageData(output, canvas.width, canvas.height), 0, 0);
 
-      // 🔥 exporta PNG con transparencia
       resolve(canvas.toDataURL("image/png"));
     };
   });
 };
+  const convertToSmartEdges = (imageSrc: string): Promise<string> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = imageSrc;
 
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) return;
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+
+      const width = canvas.width;
+      const height = canvas.height;
+
+      const output = new Uint8ClampedArray(data.length);
+
+      // 👉 grayscale
+      const grayData = new Float32Array(width * height);
+
+      for (let i = 0; i < data.length; i += 4) {
+        grayData[i / 4] =
+          0.3 * data[i] + 0.59 * data[i + 1] + 0.11 * data[i + 2];
+      }
+
+      for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+          const i = y * width + x;
+          const idx = i * 4;
+
+          const center = grayData[i];
+
+          // 🔥 detectar variación con vecinos
+          const diff =
+            Math.abs(center - grayData[i - 1]) +
+            Math.abs(center - grayData[i + 1]) +
+            Math.abs(center - grayData[i - width]) +
+            Math.abs(center - grayData[i + width]);
+
+          // 🔥 detectar bordes (tipo Sobel simplificado)
+          const edge = diff > 100;
+
+          // 🔥 detectar bloque uniforme (tipo QR)
+          const isUniform = diff < 20;
+
+          // 🔥 detectar oscuro (rellenable)
+          const isDark = center < 140;
+
+          if (edge) {
+            // línea
+            output[idx] = 0;
+            output[idx + 1] = 0;
+            output[idx + 2] = 0;
+            output[idx + 3] = 255;
+          } else if (isUniform && isDark) {
+            // 🔥 BLOQUE COMPLETO (tipo QR)
+            output[idx] = 0;
+            output[idx + 1] = 0;
+            output[idx + 2] = 0;
+            output[idx + 3] = 255;
+          } else {
+            // transparente
+            output[idx + 3] = 0;
+          }
+        }
+      }
+
+      ctx.putImageData(new ImageData(output, width, height), 0, 0);
+
+      resolve(canvas.toDataURL("image/png"));
+    };
+  });
+};
   // 🔄 PROCESAR AUTOMÁTICAMENTE CUANDO SE SUBE IMAGEN
   useEffect(() => {
-    if (!uploadedImage || !product) return;
+    if (!uploadedImage) return;
 
     const process = async () => {
-      const effect = productEffects[product.id] || "edges";
+      try {
+        let result;
 
-      let result;
+        if (mode === "edges") {
+          result = await convertToEdgesTransparent(uploadedImage);
+        } else if (mode === "smart") {
+          result = await convertToSmartEdges(uploadedImage);
+        } else {
+          result = await convertToLaserTransparent(uploadedImage);
+        }
 
-      if (effect === "wood") {
-        result = await convertToLaserTransparent(uploadedImage);
-      } else {
-        result = await convertToEdgesTransparent(uploadedImage);
-      } 
-
-      setProcessedImg(result);
+        setProcessedImg(result);
+      } catch (err) {
+        console.error("Error procesando imagen:", err);
+      }
     };
 
     process();
-  }, [uploadedImage, product]);
-
+  }, [uploadedImage, mode]);
   // 🔥 FUNCIÓN DE MOVIMIENTO CON LÍMITES (CLAMP)
   const handleMove = (clientX: number, clientY: number) => {
     const container = document.getElementById("editor-container");
@@ -354,6 +430,18 @@ const ProductPage: React.FC = () => {
             <label>Esto es solo una aproximación <br/>
               ¡Consúltenos para mostrarle una muestra real!</label>
             <input type="file" accept="image/*" onChange={handleUpload} />
+
+            <div>
+              <label>Modo de procesamiento</label>
+              <select
+                value={mode}
+                onChange={(e) => setMode(e.target.value as "edges" | "smart")}
+                className="w-full border rounded-xl p-2"
+              >
+                <option value="edges">Solo líneas</option>
+                <option value="smart">Líneas + relleno inteligente</option>
+              </select>
+            </div>
 
             {/* Escala */}
             <div>
