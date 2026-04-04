@@ -561,7 +561,12 @@ const getWoodColor = (t: number) => {
 
     setPosition({ x, y });
   };
-  
+  //Camara
+  useEffect(() => {
+    if (showCamera && videoRef.current && videoStream) {
+      videoRef.current.srcObject = videoStream;
+    }
+  }, [showCamera, videoStream]);
   // 🔥 SISTEMA DE DRAG GLOBAL (mouse + touch)
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -574,10 +579,6 @@ const getWoodColor = (t: number) => {
       const touch = e.touches[0];
       handleMove(touch.clientX, touch.clientY);
     };
-
-    if (showCamera && videoRef.current && videoStream) {
-      videoRef.current.srcObject = videoStream;
-    }
     // Al soltar → dejar de arrastrar
     const stopDragging = () => setDragging(false);
 
@@ -698,34 +699,6 @@ const getWoodColor = (t: number) => {
                 )}
               </select>
             </div>
-{showCamera && (
-  <div className="fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-50">
-    
-    <video
-      ref={videoRef}
-      autoPlay
-      playsInline
-      muted
-      className="w-80 rounded-xl mb-4"
-    />
-
-    <div className="flex gap-4">
-      <button
-        onClick={takePhoto}
-        className="bg-green-600 text-white px-4 py-2 rounded-xl"
-      >
-        📸 Sacar foto
-      </button>
-
-        <button
-          onClick={stopCamera}
-          className="bg-red-600 text-white px-4 py-2 rounded-xl"
-        >
-          ❌ Cancelar
-        </button>
-      </div>
-    </div>
-  )}
             {/* Escala */}
             <div>
               <label>Escala</label>
@@ -798,6 +771,34 @@ const getWoodColor = (t: number) => {
               Enviar por WhatsApp
             </button>
           </div>
+          {showCamera && (
+  <div className="fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-50">
+    
+    <video
+      ref={videoRef}
+      autoPlay
+      playsInline
+      muted
+      className="w-80 rounded-xl mb-4"
+    />
+
+    <div className="flex gap-4">
+      <button
+        onClick={takePhoto}
+        className="bg-green-600 text-white px-4 py-2 rounded-xl"
+      >
+        📸 Sacar foto
+      </button>
+
+        <button
+          onClick={stopCamera}
+          className="bg-red-600 text-white px-4 py-2 rounded-xl"
+        >
+          ❌ Cancelar
+        </button>
+      </div>
+    </div>
+  )}
         </div>
       </div>
     </div>
