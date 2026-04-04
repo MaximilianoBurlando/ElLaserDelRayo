@@ -103,21 +103,18 @@ const ProductPage: React.FC = () => {
     }, [product]);
     //camara
     const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" } // frontal en celular
-      });
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true
+        });
 
-      setVideoStream(stream);
-      setShowCamera(true);
+        setVideoStream(stream);
+        setShowCamera(true);
 
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
+      } catch (err) {
+        console.error("Error cámara:", err);
       }
-    } catch (err) {
-      console.error("Error accediendo a la cámara:", err);
-    }
-  };
+    };
   const stopCamera = () => {
     videoStream?.getTracks().forEach(track => track.stop());
     setShowCamera(false);
@@ -564,7 +561,7 @@ const getWoodColor = (t: number) => {
 
     setPosition({ x, y });
   };
-
+  
   // 🔥 SISTEMA DE DRAG GLOBAL (mouse + touch)
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -578,6 +575,9 @@ const getWoodColor = (t: number) => {
       handleMove(touch.clientX, touch.clientY);
     };
 
+    if (showCamera && videoRef.current && videoStream) {
+      videoRef.current.srcObject = videoStream;
+    }
     // Al soltar → dejar de arrastrar
     const stopDragging = () => setDragging(false);
 
@@ -705,6 +705,7 @@ const getWoodColor = (t: number) => {
       ref={videoRef}
       autoPlay
       playsInline
+      muted
       className="w-80 rounded-xl mb-4"
     />
 
