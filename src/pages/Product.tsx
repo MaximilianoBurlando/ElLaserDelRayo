@@ -19,17 +19,40 @@ const products = productsData as Product[];
 const ProductPage: React.FC = () => {
   // 🔎 Obtener ID desde la URL
   const { id } = useParams<{ id: string }>();
-  const [mode, setMode] = useState<"edges" | "smart" | "laser">("edges");
-  const productEffects: Record<number, "wood" | "edges"> = {
-    /*18: "wood",
-    19: "wood",
-    20: "wood",*/
+  const [mode, setMode] = useState<"edges" | "smart" | "wood">("edges");
+  const productEffects: Record<number, ("edges" | "smart" | "wood")[]> = {
+    // 🟤 PRODUCTOS NEUTROS → permitir personalización completa
+    1:[],2:[],3:[],4:[],5:[],7:[],16:[],
+    6: ["edges", "smart"],
+    8: ["edges", "smart"],
+    9: ["edges", "smart"],
+    10: ["edges", "smart"],
+    11: ["edges", "smart"],
+
+    12: ["edges", "smart"],
+
+    13: ["edges", "smart"],
+    14: ["edges", "smart"],
+    15: ["edges", "smart"],
+
+    17: ["edges", "smart"],
+
+    // 🪵 más orientados a grabado
+    18: ["wood", "edges", "smart"],
+    19: ["wood", "edges", "smart"],
+    20: ["wood", "edges", "smart"],
+
+    // ❌ los demás (Boca, River, etc.) no se ponen → usan default
   };
   // 🔍 Buscar producto por ID
   const product = products.find((p) => p.id === Number(id));
-
+  const allowedModes =
+  product && productEffects[product.id]
+    ? productEffects[product.id]
+    : ["edges", "smart", "laser", "wood"];
   // 💬 Mensaje para WhatsApp
   const [message, setMessage] = useState("");
+  const [gamma, setGamma] = useState(1.6);
 
   // 🖼️ Imagen subida por el usuario (base64)
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -49,13 +72,6 @@ const ProductPage: React.FC = () => {
   // 🔄 Rotación del diseño
   const [rotation, setRotation] = useState(0);
 
-  // 📌 Inicializar mensaje cuando carga el producto
-  useEffect(() => {
-    if (product) {
-      setMessage(`Hola! Estoy interesado en "${product.name}"`);
-    }
-  }, [product]);
-
   // 📂 SUBIR IMAGEN
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -70,7 +86,189 @@ const ProductPage: React.FC = () => {
 
     reader.readAsDataURL(file);
   };
-  //convertir imagen a tallado
+  // 🌳 PALETA REAL (basada en tu imagen)
+const woodPalette = [
+  { r: 210, g: 180, b: 140 }, // claro
+  { r: 160, g: 110, b: 70 },  // medio
+  { r: 110, g: 60, b: 30 },   // oscuro
+  { r: 75, g: 40, b: 20 },    // quemado
+];
+// 📌 Inicializar mensaje cuando carga el producto
+  useEffect(() => {
+    if (product) {
+      setMessage(`Hola! Estoy interesado en "${product.name}"`);
+    }
+  }, [product]);
+/* 🎯 función para interpolar dentro de la paleta
+const getWoodColor = (t: number) => {
+  const scaled = t * (woodPalette.length - 1);
+  const index = Math.floor(scaled);
+  const frac = scaled - index;
+
+  const c1 = woodPalette[index];
+  const c2 = woodPalette[Math.min(index + 1, woodPalette.length - 1)];
+
+  return {
+      r: c1.r + (c2.r - c1.r) * frac,
+      g: c1.g + (c2.g - c1.g) * frac,
+      b: c1.b + (c2.b - c1.b) * frac,
+    };
+  };*/
+  //convertir imagen en tallado detallado
+  const convertToWoodLaserFinal = (imageSrc: string): Promise<string> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = imageSrc;
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+
+      const width = canvas.width;
+      const height = canvas.height;
+
+      const blockSize = 3;
+
+      /* 🌳 PALETA MÁS MARRÓN (ajustada)
+      const woodPalette = [
+        { r: 225, g: 185, b: 135 }, // claro más cálido
+        { r: 175, g: 115, b: 65 },  // medio más marrón
+        { r: 120, g: 65, b: 35 },   // oscuro más intenso
+        { r: 85, g: 45, b: 25 },    // quemado cálido
+      ];*/
+
+      const getWoodColor = (t: number) => {
+        const scaled = t * (woodPalette.length - 1);
+        const index = Math.floor(scaled);
+        const frac = scaled - index;
+
+        const c1 = woodPalette[index];
+        const c2 = woodPalette[Math.min(index + 1, woodPalette.length - 1)];
+
+        return {
+          r: c1.r + (c2.r - c1.r) * frac,
+          g: c1.g + (c2.g - c1.g) * frac,
+          b: c1.b + (c2.b - c1.b) * frac,
+        };
+      };
+
+      for (let y = 0; y < height; y += blockSize) {
+        for (let x = 0; x < width; x += blockSize) {
+
+          let sum = 0;
+          let count = 0;
+
+          for (let by = 0; by < blockSize; by++) {
+            for (let bx = 0; bx < blockSize; bx++) {
+              const px = x + bx;
+              const py = y + by;
+
+              if (px >= width || py >= height) continue;
+
+              const i = (py * width + px) * 4;
+
+              const gray =
+                0.3 * data[i] + 0.59 * data[i + 1] + 0.11 * data[i + 2];
+
+              sum += gray;
+              count++;
+            }
+          }
+
+          let avgGray = sum / count;
+
+          // ☀️ gamma
+          avgGray = 255 * Math.pow(avgGray / 255, 1 / gamma);
+
+          // ✂️ eliminar blancos
+          if (avgGray > 200) {
+            for (let by = 0; by < blockSize; by++) {
+              for (let bx = 0; bx < blockSize; bx++) {
+                const px = x + bx;
+                const py = y + by;
+
+                if (px >= width || py >= height) continue;
+
+                const i = (py * width + px) * 4;
+                data[i + 3] = 0;
+              }
+            }
+            continue;
+          }
+
+          // 🔥 contraste
+          const contrast = 1.2;
+          const adjusted = Math.min(
+            255,
+            Math.max(0, (avgGray - 128) * contrast + 128)
+          );
+
+          let intensity = adjusted / 255;
+
+          // 🔥 evitar negro puro
+          intensity = Math.max(intensity, 0.08);
+
+          const t = 1 - intensity;
+
+          let { r, g, b } = getWoodColor(t);
+
+          // 🎯 DESATURACIÓN MÁS SUAVE (clave)
+          const mid = 0.5;
+          const desatFactor = Math.abs(intensity - mid) * 1.3; // antes 2 → ahora menos gris
+
+          const grayMix = (r + g + b) / 3;
+
+          r = r * (1 - (1 - desatFactor) * 0.6) + grayMix * (1 - desatFactor) * 0.6;
+          g = g * (1 - (1 - desatFactor) * 0.6) + grayMix * (1 - desatFactor) * 0.6;
+          b = b * (1 - (1 - desatFactor) * 0.6) + grayMix * (1 - desatFactor) * 0.6;
+
+          // 🌧️ líneas láser
+          const lineStrength = (y % 6 === 0) ? 0.9 : 1;
+          r *= lineStrength;
+          g *= lineStrength;
+          b *= lineStrength;
+
+          // 🌲 ruido leve
+          const noise = (Math.random() - 0.5) * 6;
+          r += noise;
+          g += noise;
+          b += noise;
+
+          // 🎨 pintar
+          for (let by = 0; by < blockSize; by++) {
+            for (let bx = 0; bx < blockSize; bx++) {
+              const px = x + bx;
+              const py = y + by;
+
+              if (px >= width || py >= height) continue;
+
+              const i = (py * width + px) * 4;
+
+              data[i] = r;
+              data[i + 1] = g;
+              data[i + 2] = b;
+              data[i + 3] = 255;
+            }
+          }
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+
+      resolve(canvas.toDataURL("image/png"));
+    };
+  });
+};
+  /*convertir imagen a tallado
   const convertToLaserTransparent = (imageSrc: string): Promise<string> => {
     return new Promise((resolve) => {
       const img = new Image();
@@ -139,7 +337,7 @@ const ProductPage: React.FC = () => {
         resolve(canvas.toDataURL("image/png")); // 👈 CLAVE
       };
     });
-  };
+  };*/
   const convertToEdgesTransparent = (imageSrc: string): Promise<string> => {
   return new Promise((resolve) => {
     const img = new Image();
@@ -279,16 +477,15 @@ const ProductPage: React.FC = () => {
 
     const process = async () => {
       try {
-        let result;
+        let result: string | null = null;
 
         if (mode === "edges") {
           result = await convertToEdgesTransparent(uploadedImage);
         } else if (mode === "smart") {
           result = await convertToSmartEdges(uploadedImage);
-        } else {
-          result = await convertToLaserTransparent(uploadedImage);
+        } else if (mode === "wood") {
+          result = await convertToWoodLaserFinal(uploadedImage);
         }
-
         setProcessedImg(result);
       } catch (err) {
         console.error("Error procesando imagen:", err);
@@ -296,7 +493,7 @@ const ProductPage: React.FC = () => {
     };
 
     process();
-  }, [uploadedImage, mode]);
+  }, [uploadedImage, mode, gamma]);
   // 🔥 FUNCIÓN DE MOVIMIENTO CON LÍMITES (CLAMP)
   const handleMove = (clientX: number, clientY: number) => {
     const container = document.getElementById("editor-container");
@@ -427,7 +624,7 @@ const ProductPage: React.FC = () => {
 
           {/* 🎛️ CONTROLES */}
           <div className="mt-4 space-y-2">
-            <label>Esto es solo una aproximación <br/>
+            <label><center>¡ADVERTENCIA!</center><br/>Esto es solo una aproximación <br/>
               ¡Consúltenos para mostrarle una muestra real!</label>
             <input type="file" accept="image/*" onChange={handleUpload} />
 
@@ -435,11 +632,22 @@ const ProductPage: React.FC = () => {
               <label>Modo de procesamiento</label>
               <select
                 value={mode}
-                onChange={(e) => setMode(e.target.value as "edges" | "smart")}
+                onChange={(e) =>
+                  setMode(e.target.value as "edges" | "smart" | "wood")
+                }
                 className="w-full border rounded-xl p-2"
               >
-                <option value="edges">Solo líneas</option>
-                <option value="smart">Líneas + relleno inteligente</option>
+                {allowedModes.includes("edges") && (
+                  <option value="edges">Solo líneas</option>
+                )}
+
+                {allowedModes.includes("smart") && (
+                  <option value="smart">Líneas + relleno inteligente</option>
+                )}
+
+                {allowedModes.includes("wood") && (
+                  <option value="wood">Grabado madera (realista)</option>
+                )}
               </select>
             </div>
 
@@ -465,6 +673,17 @@ const ProductPage: React.FC = () => {
                 max="360"
                 value={rotation}
                 onChange={(e) => setRotation(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <label>Gamma / Brillo ({gamma.toFixed(1)})</label>
+              <input
+                type="range"
+                min="0.5"
+                max="2.5"
+                step="0.1"
+                value={gamma}
+                onChange={(e) => setGamma(Number(e.target.value))}
               />
             </div>
           </div>
