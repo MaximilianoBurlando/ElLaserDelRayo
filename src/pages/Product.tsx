@@ -669,7 +669,8 @@ const getWoodColor = (t: number) => {
           {/* 🎛️ CONTROLES */}
           <div className="mt-4 space-y-2">
             <label><center>¡ADVERTENCIA!</center><br/>Esto es solo una aproximación <br/>
-              ¡Consúltenos para mostrarle una muestra real!</label>
+              ¡Consúltenos para mostrarle una muestra real!<br/>
+              Elija una Imagen/Logo que queire tallar:</label>
             <input type="file" accept="image/*" onChange={handleUpload} />
             <button
               onClick={startCamera}
