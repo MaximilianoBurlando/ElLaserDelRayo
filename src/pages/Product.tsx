@@ -105,40 +105,41 @@ const ProductPage: React.FC = () => {
     const startCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: true
-        });
+          video: {
+            facingMode: "user" // solo indicamos la cámara frontal
+          }
+      });
 
-        setVideoStream(stream);
-        setShowCamera(true);
-
-      } catch (err) {
-        console.error("Error cámara:", err);
-      }
-    };
+    setVideoStream(stream);
+    setShowCamera(true);
+  } catch (err) {
+    console.error("Error cámara:", err);
+  }
+};
   const stopCamera = () => {
     videoStream?.getTracks().forEach(track => track.stop());
     setShowCamera(false);
   };
   const takePhoto = () => {
-    if (!videoRef.current) return;
+  if (!videoRef.current) return;
 
-    const video = videoRef.current;
+  const video = videoRef.current;
+  const canvas = document.createElement("canvas");
 
-    const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+  // 🔹 Usamos exactamente la resolución del video
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
 
-    ctx.drawImage(video, 0, 0);
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const imageData = canvas.toDataURL("image/png");
+  const imageData = canvas.toDataURL("image/jpeg", 0.8);
+  setUploadedImage(imageData);
 
-    setUploadedImage(imageData); // 🔥 esto lo mete directo a tu flujo actual
-
-    stopCamera();
-  };
+  stopCamera();
+};
 /* 🎯 función para interpolar dentro de la paleta
 const getWoodColor = (t: number) => {
   const scaled = t * (woodPalette.length - 1);
@@ -667,19 +668,48 @@ const getWoodColor = (t: number) => {
           </div>
 
           {/* 🎛️ CONTROLES */}
-          <div className="mt-4 space-y-2">
-            <label><center>¡ADVERTENCIA!</center><br/>Esto es solo una aproximación <br/>
-              ¡Consúltenos para mostrarle una muestra real!<br/>
-              Elija una Imagen/Logo que queire tallar:</label>
-            <input type="file" accept="image/*" onChange={handleUpload} />
-            <button
-              onClick={startCamera}
-              className="w-full mt-2 bg-blue-600 text-white py-2 rounded-xl"
-            >
-              Usar cámara
-            </button>
+          <div className="mt-4 flex flex-col items-center">
+            {/* Texto explicativo arriba */}
+            <p className="text-center mb-4">
+              ¡ADVERTENCIA! <br />
+              Esto es solo una aproximación. <br />
+              ¡Consúltenos para mostrarle una muestra real! <br />
+              Elija una imagen/logo que quiere tallar:
+            </p>
+
+            {/* Contenedor para los botones alineados verticalmente */}
+            <div className="flex flex-col items-center gap-2">
+
+              {/* Botón de subir imagen */}
+              <input
+                type="file"
+                id="file-upload"
+                accept="image/*"
+                onChange={handleUpload}
+                style={{ display: "none" }}
+              />
+              <label
+                htmlFor="file-upload"
+                className="w-64 bg-blue-600 text-white py-3 rounded-xl text-center cursor-pointer text-lg font-semibold hover:bg-blue-700"
+              >
+                Subir Imagen
+              </label>
+
+              {/* Botón de cámara */}
+              <button
+                onClick={startCamera}
+                className="w-64 bg-blue-600 text-white py-3 rounded-xl text-center text-lg font-semibold hover:bg-blue-700"
+              >
+                Usar Cámara
+              </button>
+
+              {/* Mensaje opcional cuando hay imagen cargada */}
+              {uploadedImage && (
+                <p className="mt-1 text-sm text-gray-700">Imagen cargada ✅</p>
+              )}
+            </div>
             <div>
-              <label>Modo de procesamiento</label>
+              <label>Modo de procesamiento:</label>
               <select
                 value={mode}
                 onChange={(e) =>
@@ -700,41 +730,6 @@ const getWoodColor = (t: number) => {
                 )}
               </select>
             </div>
-            {/* Escala */}
-            <div>
-              <label>Escala</label>
-              <input
-                type="range"
-                min="0.5"
-                max="3"
-                step="0.1"
-                value={scale}
-                onChange={(e) => setScale(Number(e.target.value))}
-              />
-            </div>
-
-            {/* Rotación */}
-            <div>
-              <label>Rotación</label>
-              <input
-                type="range"
-                min="0"
-                max="360"
-                value={rotation}
-                onChange={(e) => setRotation(Number(e.target.value))}
-              />
-            </div>
-            <div>
-              <label>Gamma / Brillo ({gamma.toFixed(1)})</label>
-              <input
-                type="range"
-                min="0.5"
-                max="2.5"
-                step="0.1"
-                value={gamma}
-                onChange={(e) => setGamma(Number(e.target.value))}
-              />
-            </div>
           </div>
         </div>
 
@@ -747,7 +742,41 @@ const getWoodColor = (t: number) => {
           <p className="text-gray-600 mb-6">
             {product.description}
           </p>
+            {/* Escala */}
+            <div><br/>
+              <label>Escala</label><br/>
+              <input
+                type="range"
+                min="0.5"
+                max="3"
+                step="0.1"
+                value={scale}
+                onChange={(e) => setScale(Number(e.target.value))}
+              />
+            </div>
 
+            {/* Rotación */}
+            <div><br/>
+              <label>Rotación</label><br/>
+              <input
+                type="range"
+                min="0"
+                max="360"
+                value={rotation}
+                onChange={(e) => setRotation(Number(e.target.value))}
+              />
+            </div>
+            <div><br/>
+              <label>Gamma / Brillo ({gamma.toFixed(1)})</label><br/>
+              <input
+                type="range"
+                min="0.5"
+                max="2.5"
+                step="0.1"
+                value={gamma}
+                onChange={(e) => setGamma(Number(e.target.value))}
+              />
+            </div>
           {/* 📲 BLOQUE WHATSAPP */}
           <div className="mt-4 border rounded-2xl p-4">
             <h2 className="font-semibold mb-2">
