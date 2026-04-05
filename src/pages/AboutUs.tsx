@@ -46,6 +46,20 @@ export default function AboutUs() {
         Nuestro objetivo es brindarte productos originales y personalizados
         que se adapten a tus necesidades.
       </p>
+      <br/>
+      <p className="text-gray-700">
+        Correo del Creador de la página:{" "}
+        <a
+          href="https://mail.google.com/mail/?view=cm&to=burlandomaxi@gmail.com&su=Consulta%20sobre%20producto&body=Hola,%20quiero%20información%20sobre..."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-2 rounded-full text-white font-semibold 
+                    bg-blue-600 hover:bg-blue-700 
+                    hover:scale-105 transition transform"
+        >
+          burlandomaxi@gmail.com
+        </a>
+      </p>
 
     </div>
   );
